@@ -1,0 +1,49 @@
+---
+title: 'Machines UI: An Alternative Fly.io Dashboard'
+description: 'A modern, vibe-coded dashboard for managing Fly.io apps, machines, and volumes through the Machines API.'
+pubDate: 2026-03-09
+author: 'Kyle McLaren'
+tags: ['TypeScript', 'Next.js', 'Fly.io', 'Open Source']
+cover: assets/cover.png
+---
+
+The official Fly.io dashboard is great, but I wanted something more focused on the [Machines API](https://fly.io/docs/machines/api/) — a clean interface for quickly checking on apps, machines, and volumes without switching between `flyctl` commands.
+
+[Machines UI](https://github.com/kylemclaren/machines-ui) is an alternative Fly.io dashboard built with Next.js 15 and React 19. It talks directly to the Machines API and gives you a fast, searchable overview of your infrastructure.
+
+## Why build another dashboard?
+
+Working at Fly.io, I spend a lot of time in the Machines API. The official dashboard is designed for a broad audience, but I wanted something that surfaces the information I care about most:
+
+- **Quick search** across all apps and machines
+- **Machine state at a glance** — started, stopped, suspended, with color-coded status
+- **Volume management** — see what's attached where, usage stats
+- **One-click deploy** — launch it from a single `fly launch` command
+
+## The stack
+
+This was one of my "vibe coded" projects — built fast, iterated on feel, and shipped when it felt right:
+
+- **Next.js 15** with App Router
+- **React 19** with server components where it makes sense
+- **TailwindCSS 4** for styling
+- **React Query** for data fetching and caching
+- **Axios** for the Machines API client
+
+Authentication uses a Fly.io API token that you generate with `fly tokens create org`. The token stays client-side and is only used for direct API calls.
+
+## Deploy it yourself
+
+The easiest way to run it is on Fly.io itself:
+
+```bash
+fly launch --from https://github.com/kylemclaren/machines-ui.git
+```
+
+That's it. You get your own private dashboard running in whatever region you choose.
+
+## What's next
+
+I've been adding features as I need them — logs streaming, machine exec, and secrets management are all on the list. The nice thing about building your own dashboard is you can optimize for your own workflow.
+
+Check it out on [GitHub](https://github.com/kylemclaren/machines-ui).

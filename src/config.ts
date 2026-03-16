@@ -27,6 +27,10 @@ export const SITE: Site = {
 
 export const HEADER_LINKS: Link[] = [
   {
+    name: 'Posts',
+    url: '/posts',
+  },
+  {
     name: 'Work',
     url: '/work',
   },
@@ -40,6 +44,10 @@ export const FOOTER_LINKS: Link[] = [
   {
     name: 'Home',
     url: '/',
+  },
+  {
+    name: 'Posts',
+    url: '/posts',
   },
   {
     name: 'Work',

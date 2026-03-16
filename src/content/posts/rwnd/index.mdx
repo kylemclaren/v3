@@ -1,0 +1,62 @@
+---
+title: 'rwnd: Rewind Your Dependency History'
+description: 'A CLI tool that tracks dependency size growth over git history. See how your node_modules got so big.'
+pubDate: 2026-01-23
+author: 'Kyle McLaren'
+tags: ['TypeScript', 'CLI', 'Open Source']
+cover: assets/cover.png
+---
+
+Every developer has had that moment: you run `npm install` and watch 400MB of packages download, and you wonder — how did we get here? Was it always this big? When did it get bad?
+
+[rwnd](https://github.com/kylemclaren/rwnd) answers that question. It's a CLI tool that analyzes any GitHub repo's git history and charts how dependency directories have grown over time. It supports Node.js, Python, Go, Rust, Ruby, and PHP.
+
+## What it does
+
+Point it at a repo and it will:
+
+1. Clone the repo and sample commits across its history
+2. Calculate the dependency directory size at each commit (`node_modules/`, `.venv/`, `vendor/`, `target/`, etc.)
+3. Render an ASCII chart showing growth over time
+4. Show you which commits caused the biggest jumps
+5. Tell you fun facts like "your node_modules is equivalent to 75 floppy disks"
+
+```bash
+rwnd facebook/react
+```
+
+That's it. Auto-detects the language from lockfiles and project manifests.
+
+## The blame view
+
+My favorite feature is the blame view — it shows which specific commits caused the largest size increases. This is useful when you're trying to figure out which dependency addition ballooned your install size:
+
+```
+Biggest Size Increases
+  1. +18.2 MB   f5cc764 v4.2.1
+  2. +10.4 MB   42fd8d3 Add URL support
+  3.  +4.1 MB   a89b2c1 Upgrade TypeScript
+```
+
+Combined with the heaviest dependencies list, you get a clear picture of where the weight is and when it arrived.
+
+## Smart sampling
+
+For repos with thousands of commits, rwnd automatically samples at regular intervals rather than analyzing every single commit. You can override this with `--commits` to control how many data points you want.
+
+## Six languages
+
+Each language measures the right thing:
+
+| Language | Directory measured |
+|----------|-------------------|
+| Node.js | `node_modules/` |
+| Python | `.venv/` |
+| Go | Go module cache |
+| Rust | `target/` + `.cargo/` |
+| Ruby | `vendor/bundle/` |
+| PHP | `vendor/` |
+
+It also ships with a web UI ([rwnd-ui](https://github.com/kylemclaren/rwnd-ui)) if you prefer charts over ASCII art.
+
+Install it with `npm install -g rwnd` and check it out on [GitHub](https://github.com/kylemclaren/rwnd).

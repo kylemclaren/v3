@@ -24,6 +24,11 @@ RUN apt-get update -qq && \
 COPY bun.lock package.json ./
 RUN bun install
 
+# Upstash env vars (baked into static build)
+ARG PUBLIC_UPSTASH_REDIS_REST_URL
+ARG PUBLIC_UPSTASH_REDIS_REST_TOKEN_RO
+ARG PUBLIC_UPSTASH_REDIS_REST_TOKEN
+
 # Copy application code
 COPY . .
 

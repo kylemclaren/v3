@@ -1,0 +1,52 @@
+---
+title: 'Claude Tasks: Scheduling AI Agents with Cron'
+description: 'A TUI scheduler that runs Claude Code tasks on a cron schedule, with Discord/Slack notifications and usage tracking.'
+pubDate: 2026-01-14
+author: 'Kyle McLaren'
+tags: ['Go', 'AI', 'Claude Code', 'Open Source']
+cover: assets/cover.png
+---
+
+I've been using [Claude Code](https://claude.ai/claude-code) for a lot of my day-to-day work, and I kept finding myself wanting to schedule recurring tasks — run a code review every morning, check for dependency updates weekly, generate a status report at end of day.
+
+So I built [claude-tasks](https://github.com/kylemclaren/claude-tasks), a TUI scheduler that runs Claude Code tasks on a cron schedule.
+
+## The idea
+
+The concept is simple: define a task with a prompt and a cron expression, and claude-tasks will invoke Claude Code at the scheduled time, capture the output, and optionally post the results to Discord or Slack.
+
+Think of it as cron meets AI agents. Each task is a self-contained Claude Code session that runs with whatever context you give it.
+
+## Built with Bubble Tea
+
+I wanted a proper terminal UI, not just a CLI that dumps text. The TUI is built with [Bubble Tea](https://github.com/charmbracelet/bubbletea) and includes:
+
+- Live task status with spinners and progress bars
+- Cron expression editor with presets (`?` shows common patterns)
+- Task output history rendered with [Glamour](https://github.com/charmbracelet/glamour) for formatted markdown
+- API usage tracking with visual progress bars
+- Search and filtering across tasks
+
+The keybindings are designed to feel natural — `a` to add, `e` to edit, `r` to run immediately, `d` to delete with confirmation.
+
+## Usage thresholds
+
+One feature I'm particularly happy with is usage thresholds. You can set a percentage of your Anthropic API budget, and claude-tasks will automatically skip scheduled runs when you're above the threshold. This prevents runaway costs if you have aggressive schedules.
+
+## Notifications
+
+Task results can be posted to Discord or Slack via webhooks. The messages include the task name, the prompt, the output (truncated if needed), and timing information. This makes it easy to set up a channel where your AI agent reports its findings.
+
+## Getting started
+
+```bash
+# Install
+curl -fsSL https://raw.githubusercontent.com/kylemclaren/claude-tasks/main/install.sh | bash
+
+# Launch the TUI
+claude-tasks
+```
+
+Tasks are stored in SQLite, so your schedule persists across restarts. The whole thing is a single Go binary with no external dependencies beyond Claude Code itself.
+
+Check it out on [GitHub](https://github.com/kylemclaren/claude-tasks).

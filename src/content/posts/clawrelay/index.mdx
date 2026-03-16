@@ -1,0 +1,53 @@
+---
+title: 'ClawRelay: Wake-on-Message for OpenClaw'
+description: 'A relay bridge that keeps Discord and Telegram bots online while letting the AI backend sleep to save costs.'
+pubDate: 2026-02-27
+author: 'Kyle McLaren'
+tags: ['TypeScript', 'OpenClaw', 'Fly.io', 'Open Source']
+cover: assets/cover.png
+---
+
+If you're running [OpenClaw](https://github.com/openai/openclaw) on a Sprite or any cloud sandbox, you've probably hit the cost problem: keeping a machine running 24/7 just to respond to occasional Discord or Telegram messages is wasteful. But if you stop the machine, your bots go offline.
+
+[ClawRelay](https://github.com/kylemclaren/clawrelay) solves this with a wake-on-message pattern. A tiny, always-on relay stays connected to Discord and Telegram, queues incoming messages, wakes the sleeping sandbox when a message arrives, and forwards everything to your OpenClaw gateway.
+
+## The architecture
+
+The system has two parts:
+
+1. **The relay** (`packages/relay`) — An always-on Node.js service that maintains Discord WebSocket and Telegram long-polling connections. It's lightweight enough to run on a Fly.io machine with minimal resources.
+
+2. **The channel plugin** (`packages/relay-channel`) — An OpenClaw plugin that registers a `relay.inbound` gateway method and a `/relay/health` HTTP endpoint. This is what the relay talks to.
+
+When a message arrives:
+
+1. The platform adapter normalizes the message into a common format
+2. The message hits an in-memory FIFO queue (5-minute TTL)
+3. The wake manager checks `/relay/health` — if the gateway is down, it wakes the Sprite via the Machines API
+4. The relay connects to the OpenClaw gateway via WebSocket and authenticates
+5. The message is sent as a `relay.inbound` method call with streaming enabled
+6. As tokens arrive, the relay progressively edits the Discord/Telegram message with accumulated text
+7. On completion, the final response is delivered, split across messages if needed
+
+The result: your bots appear permanently online, but the expensive AI backend only runs when there's actually a conversation happening.
+
+## Streaming responses
+
+One detail I'm proud of is the streaming implementation. When OpenClaw generates a response, tokens stream back via `relay.stream.delta` events. The relay accumulates these and progressively edits the platform message — so users see the response being typed out in real time, just like native OpenClaw channels.
+
+Discord messages are edited every second (throttled to avoid rate limits), and long responses are automatically split at platform limits (2000 chars for Discord, 4096 for Telegram).
+
+## Deployment
+
+The relay runs on Fly.io, connected to an OpenClaw gateway on a Sprite:
+
+```bash
+cd packages/relay
+fly deploy
+fly secrets set DISCORD_TOKEN="..." TELEGRAM_BOT_TOKEN="..." \
+  GATEWAY_AUTH_TOKEN="..." SPRITE_TOKEN="..."
+```
+
+The Sprite can be set to auto-stop when idle. When the next message comes in, ClawRelay wakes it up, waits for the health check to pass, and forwards the queued messages. Cold start is typically under 10 seconds.
+
+Check it out on [GitHub](https://github.com/kylemclaren/clawrelay).

@@ -1,0 +1,44 @@
+---
+title: 'Tabby: AI-Powered Chrome Tab Management'
+description: 'A Chrome tab manager that auto-discovers tabs via CDP, saves sessions, and uses Ollama for classification and summarization.'
+pubDate: 2026-03-15
+author: 'Kyle McLaren'
+tags: ['TypeScript', 'Next.js', 'AI', 'Open Source']
+cover: assets/cover.png
+---
+
+I am a tab hoarder. At any given time I have 100+ tabs open across multiple Chrome windows, and I've accepted that about myself. What I haven't accepted is losing track of what's where, having duplicates I don't know about, and not being able to find that article I was reading three days ago.
+
+So I built [Tabby](https://github.com/kylemclaren/tabby) — a Chrome tab manager that connects to your browser via the DevTools Protocol and adds AI-powered organization on top.
+
+## How it connects
+
+Tabby doesn't use a Chrome extension. Instead, it connects directly via Chrome's [DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/) over WebSocket. You enable remote debugging in `chrome://inspect/#remote-debugging`, and Tabby reads the `DevToolsActivePort` file to connect.
+
+This gives it full access to tab lifecycle events — opens, closes, navigations, focus changes. It polls every 30 seconds and tracks everything in a local SQLite database via Drizzle ORM.
+
+## The AI layer
+
+The interesting part is what happens after tab discovery. Tabby connects to a local [Ollama](https://ollama.ai) instance for:
+
+- **Auto-classification** — Every tab gets categorized (work, social, dev, news, etc.) with article detection
+- **Summarization** — Long-form articles get automatic summaries on sync
+- **Smart grouping** — AI-suggested tab groups based on content similarity
+
+All inference runs locally. No data leaves your machine.
+
+## Features I actually use
+
+**Sessions** are the killer feature for me. Tabby auto-saves a "Latest" session snapshot on every sync. You can also manually save named sessions, export them as JSON, and restore them later. When Chrome crashes (or I finally close those 100 tabs), nothing is lost.
+
+**Duplicate detection** finds tabs with the same URL across windows. I'm always surprised by how many I have.
+
+**Stale tab detection** identifies tabs inactive for 24+ hours. It's a gentle nudge to either read that article or close it.
+
+**Command palette** (`Cmd+K`) lets you search across tabs, history, sessions, and groups. It's the fastest way to find anything.
+
+## The stack
+
+Next.js 16 with App Router, shadcn/ui, SQLite via `bun:sqlite`, and Docker for deployment. The whole thing runs as a local web app with an nginx reverse proxy.
+
+Check it out on [GitHub](https://github.com/kylemclaren/tabby).

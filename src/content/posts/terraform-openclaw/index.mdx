@@ -1,0 +1,123 @@
+---
+title: 'OpenClaw 🤝 Terraform'
+description: 'Infrastructure-as-code for the lobster in your life. A Terraform provider for declarative OpenClaw gateway configuration.'
+pubDate: 2026-03-01
+author: 'Kyle McLaren'
+tags: ['Go', 'Terraform', 'OpenClaw', 'Open Source']
+cover: assets/cover.jpg
+---
+
+OpenClaw went from a weekend WhatsApp relay script to 213,000+ GitHub stars in under two months. People are calling it the death of SaaS lock-in. And with OpenAI bringing on its creator, the ecosystem is only accelerating.
+
+But here's the thing nobody's talking about: **configuring OpenClaw is a nightmare.**
+
+OpenClaw's CLI and control UI are great for getting started — tweak a setting, toggle a channel, ship it. But as setups grow — multiple agents, multiple channels, bindings wiring them together, tool permissions, cron jobs — you start running into questions the CLI wasn't built to answer. What changed last Tuesday? Who enabled that plugin? Can I clone this setup to a second machine? What happens if I need to rebuild from scratch?
+
+These aren't config editing problems. They're infrastructure problems. And infrastructure problems have a lobster-shaped solution.
+
+Today I'm releasing [terraform-provider-openclaw](https://github.com/kylemclaren/terraform-provider-openclaw) — a Terraform provider that lets you manage your entire OpenClaw gateway configuration as code. Version-controlled, reviewable, reproducible, and composable with whatever else you're already running in Terraform.
+
+## Why Terraform?
+
+There are a couple of guides and repos for standing up the gateway using Terraform. But deploying OpenClaw is only half the problem. What about the configuration running on it?
+
+The CLI and UI give you imperative control: run a command, change a thing. Terraform gives you declarative control: describe the end state, let the tool figure out the diff. That distinction matters when you want to:
+
+- Review changes before they land
+- Roll back to last week's config with a `git revert`
+- Spin up an identical agent stack on a new machine in one `terraform apply`
+
+It's the difference between clicking around a dashboard and having a blueprint.
+
+Your desired state looks like this:
+
+```hcl
+resource "openclaw_agent" "home" {
+  agent_id      = "home"
+  default_agent = true
+  name          = "Molty"
+  model         = "anthropic/claude-opus-4-6"
+
+  identity_name  = "Molty"
+  identity_emoji = "🦞"
+  identity_theme = "helpful space lobster"
+
+  mention_patterns = ["@openclaw", "molty"]
+}
+
+resource "openclaw_agent" "work" {
+  agent_id  = "work"
+  name      = "Work Agent"
+  model     = "anthropic/claude-sonnet-4-6"
+
+  sandbox_mode  = "all"
+  sandbox_scope = "session"
+  tools_profile = "coding"
+  tools_deny    = ["canvas"]
+}
+
+resource "openclaw_binding" "home_wa" {
+  agent_id      = openclaw_agent.home.agent_id
+  match_channel = "whatsapp"
+}
+
+resource "openclaw_binding" "work_tg" {
+  agent_id      = openclaw_agent.work.agent_id
+  match_channel = "telegram"
+}
+```
+
+`terraform plan` shows you exactly what will change. `terraform apply` makes it so. Your lobster's configuration finally gets the same treatment as the rest of your infrastructure. No more YOLO-editing JSON at 11pm.
+
+## 18 Resources, Two Modes, One Crustacean
+
+The provider covers every section of the OpenClaw config. The full exoskeleton, if you will:
+
+- **Core** — gateway settings, agent defaults, individual agents, multi-agent bindings, session lifecycle, message handling
+- **Channels** — WhatsApp, Telegram, Discord, Slack, Signal, iMessage, Google Chat. Each with full control over DM policies, allowlists, streaming modes, history limits, and platform-specific features
+- **Extensions** — plugins, skills, hooks, cron jobs, tool access control
+
+It also ships 6 read-only data sources for introspecting your running gateway — useful for health checks, config auditing, or feeding values into other Terraform resources.
+
+## Live or Offline
+
+The provider auto-detects how to connect:
+
+- **WebSocket mode** — when the gateway is running, it patches config via JSON-RPC. Changes take effect immediately.
+- **File mode** — for pre-provisioning and CI/CD. Reads and writes `openclaw.json` directly. No running gateway needed.
+
+File mode is the killer feature for anyone running OpenClaw in production. Build and validate your entire config in a CI pipeline, ship the JSON artifact, then start the gateway. No boot-time surprises. Your lobster hatches fully formed.
+
+## The Multi-Agent Story
+
+This is where Terraform's declarative model gets its claws into something really useful.
+
+OpenClaw's multi-agent routing lets you run specialized agents on different channels — a personal assistant on WhatsApp, a coding agent on Telegram, a team bot on Discord. But wiring that up by hand means coordinating agent definitions, binding rules, channel configs, and tool permissions across a sprawling JSON file.
+
+With the Terraform provider, those relationships are explicit, typed, and cross-referenced:
+
+```hcl
+resource "openclaw_binding" "home_wa" {
+  agent_id         = openclaw_agent.home.agent_id
+  match_channel    = "whatsapp"
+  match_account_id = "personal"
+}
+
+resource "openclaw_binding" "work_tg" {
+  agent_id      = openclaw_agent.work.agent_id
+  match_channel = "telegram"
+}
+```
+
+Add a new agent? Terraform tells you if you forgot a binding. Remove a channel? It warns you about orphaned routes. Rename an agent ID? One variable change propagates everywhere. It's infrastructure-as-code doing what it does best: making the blast radius of your mistakes visible before they become incidents.
+
+## Declare Your Lobster
+
+The provider currently covers the full OpenClaw config surface as of v2026.2. As OpenClaw continues to evolve — new channel types, new agent capabilities — the provider will track it.
+
+If you're already running OpenClaw, your AI agents deserve the same rigor as the rest of your infrastructure. Declare your lobster.
+
+- **GitHub**: [kylemclaren/terraform-provider-openclaw](https://github.com/kylemclaren/terraform-provider-openclaw)
+- **Docs**: [openclaw-tf.fly.dev](https://openclaw-tf.fly.dev)
+- **Registry**: [registry.terraform.io/kylemclaren/openclaw](https://registry.terraform.io/providers/kylemclaren/openclaw)
+- **License**: MIT

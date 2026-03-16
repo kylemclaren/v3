@@ -1,7 +1,10 @@
 app = 'kylemclaren-com'
 primary_region = 'jnb'
 
-[build]
+[build.args]
+  PUBLIC_UPSTASH_REDIS_REST_URL = "https://active-sparrow-73694.upstash.io"
+  PUBLIC_UPSTASH_REDIS_REST_TOKEN_RO = "ggAAAAAAAR_eAAIgcDLiCYr6qtk8RV2A6a9VZ5GbRXvq_n1jhZ-qxbWd_GmS-A"
+  PUBLIC_UPSTASH_REDIS_REST_TOKEN = "gQAAAAAAAR_eAAIncDJmYWRkNjA3ZTRlNjE0YTA0YTY3YWJiZTY1NDZhMzJmZXAyNzM2OTQ"
 
 [http_service]
   internal_port = 80

@@ -1,0 +1,60 @@
+---
+title: 'Building Spritedrop: Taildrop File Transfer for Cloud Sandboxes'
+description: 'How I built a persistent Taildrop file receiver to move files between Sprites and any device on your tailnet.'
+pubDate: 2026-01-12
+author: 'Kyle McLaren'
+tags: ['Go', 'Tailscale', 'Sprites', 'Open Source']
+cover: assets/cover.png
+---
+
+One of the things I kept running into while working on [Sprites](https://sprites.dev) was needing to move files between my local machine and cloud sandboxes. SSH/SCP works, but it's clunky. I wanted something that felt native — drag and drop from Finder, or a quick CLI command.
+
+Tailscale's [Taildrop](https://tailscale.com/kb/1106/taildrop) is perfect for this, but it's designed for interactive use. You receive a file, and the receiver exits. For a cloud sandbox that might be running unattended, you need something that keeps listening.
+
+So I built [spritedrop](https://github.com/kylemclaren/spritedrop).
+
+## How it works
+
+Spritedrop is a small Go binary that wraps `tailscale file get` in a persistent loop. It continuously listens for incoming Taildrop files, saves them to `~/incoming`, and restarts the receiver. It runs as a systemd service or Sprite service, so it starts automatically and survives reboots.
+
+The install script handles everything — installing Tailscale if needed, authenticating, setting a hostname, and registering the service:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/kylemclaren/spritedrop/main/install.sh)
+```
+
+Once installed, sending files is as simple as:
+
+```bash
+# CLI
+tailscale file cp myfile.txt my-sprite:
+
+# Or right-click in Finder → Share → Taildrop
+```
+
+## The tailnet architecture
+
+For projects with multiple Sprites, I recommend creating a dedicated tailnet using a GitHub organization. This keeps your Sprites isolated and discoverable:
+
+1. Create a GitHub org (e.g., `myproject-sprites`)
+2. Sign up for Tailscale using that org
+3. Install spritedrop on each Sprite — they automatically join the same tailnet
+
+This gives you a private network where any device can send files to any Sprite, and Sprites can send files to each other.
+
+## Claude Code integration
+
+Since Sprites are often used with Claude Code, spritedrop installs a `/spritedrop` skill that lets you check incoming files and send files directly from the Claude Code session:
+
+```
+/spritedrop              # Check incoming files and status
+/spritedrop send <file> <device>   # Send a file to another device
+```
+
+This turned out to be one of the most useful features — AI agents can now receive and send files across your tailnet without any manual intervention.
+
+## What I learned
+
+Building spritedrop reinforced something I keep coming back to: the best developer tools are the ones that disappear. You shouldn't have to think about file transfer. You just drop a file and it shows up. Tailscale's networking layer makes this possible, and spritedrop just makes it persistent.
+
+Check it out on [GitHub](https://github.com/kylemclaren/spritedrop).

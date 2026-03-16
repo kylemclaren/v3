@@ -6,6 +6,7 @@ import SectionDivider from '~/components/base/SectionDivider.astro'
 import GithubContributions from '~/components/base/GithubContributions.tsx'
 import SocialLink from '~/components/base/SocialLink.astro'
 import SkillsShowcase from '~/components/base/SkillsShowcase.astro'
+import ThumbsUp from '~/components/base/ThumbsUp.tsx'
 
 const { ENABLED, GITHUB_USERNAME, TOOLTIP_ENABLED } = GITHUB_CONFIG
 const { SKILLS_ENABLED, SKILLS_DATA } = SKILLSSHOWCASE_CONFIG
@@ -30,12 +31,15 @@ const { SKILLS_ENABLED, SKILLS_DATA } = SKILLSSHOWCASE_CONFIG
           and Elastic.
         </p>
       </div>
-      <div class="mt-6 flex gap-6">
+      <div class="mt-6 flex items-center gap-6">
         {
           SOCIAL_LINKS.map((item) => {
             return <SocialLink href={item.url} icon={item.icon} aria-label={`Link of ${item.name}`} count={item.count} label="followers" />
           })
         }
+        <div class="ml-auto">
+          <ThumbsUp client:load />
+        </div>
       </div>
     </div>
     {
