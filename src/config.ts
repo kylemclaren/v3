@@ -14,52 +14,40 @@ import type {
 
 //--- Readme Page Config ---
 export const SITE: Site = {
-  title: 'Litos',
+  title: 'Kyle McLaren',
   description:
-    'Litos is a modern blogging theme built on Astro.js, designed for developers. It supports multiple post layouts, photo displays, project displays, and more, providing an elegant user experience and powerful customization capabilities.',
-  website: 'https://litos.vercel.app/',
+    'Software engineer at Fly.io. Building cloud sandboxes, AI-powered developer tools, and open source infrastructure.',
+  website: 'https://kylemclaren.com/',
   lang: 'en',
   base: '/',
-  author: 'Dnzzk2',
+  author: 'Kyle McLaren',
   ogImage: '/og-image.webp',
   transition: false,
 }
 
 export const HEADER_LINKS: Link[] = [
   {
-    name: 'Posts',
-    url: '/posts',
+    name: 'Work',
+    url: '/work',
   },
   {
     name: 'Projects',
     url: '/projects',
-  },
-  {
-    name: 'Photos',
-    url: '/photos',
   },
 ]
 
 export const FOOTER_LINKS: Link[] = [
   {
-    name: 'Readme',
+    name: 'Home',
     url: '/',
   },
   {
-    name: 'Posts',
-    url: '/posts',
+    name: 'Work',
+    url: '/work',
   },
   {
     name: 'Projects',
     url: '/projects',
-  },
-  {
-    name: 'Tags',
-    url: '/tags',
-  },
-  {
-    name: 'Photos',
-    url: '/photos',
   },
 ]
 
@@ -67,19 +55,19 @@ export const FOOTER_LINKS: Link[] = [
 export const SOCIAL_LINKS: SocialLink[] = [
   {
     name: 'github',
-    url: 'https://github.com/Dnzzk2',
+    url: 'https://github.com/kylemclaren',
     icon: 'icon-[ri--github-fill]',
-    count: 20,
+    count: 65,
+  },
+  {
+    name: 'linkedin',
+    url: 'https://www.linkedin.com/in/kylemclarenza',
+    icon: 'icon-[ri--linkedin-fill]',
   },
   {
     name: 'twitter',
-    url: 'https://x.com/yourname',
+    url: 'https://twitter.com/kylemclaren',
     icon: 'icon-[ri--twitter-x-fill]',
-  },
-  {
-    name: 'bilibili',
-    url: 'https://space.bilibili.com/yourSpaceId',
-    icon: 'icon-[ri--bilibili-fill]',
   },
 ]
 
@@ -100,34 +88,39 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
       direction: 'left',
       skills: [
         {
-          name: 'JavaScript',
-          icon: 'icon-[skill-icons--javascript]',
-          url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
-        },
-        {
-          name: 'CSS',
-          icon: 'icon-[skill-icons--css]',
-          url: 'https://developer.mozilla.org/en-US/docs/Web/CSS',
-        },
-        {
-          name: 'HTML',
-          icon: 'icon-[skill-icons--html]',
-          url: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
+          name: 'Go',
+          icon: 'icon-[simple-icons--go]',
+          url: 'https://go.dev/',
         },
         {
           name: 'TypeScript',
-          icon: 'icon-[skill-icons--typescript]',
+          icon: 'icon-[simple-icons--typescript]',
           url: 'https://www.typescriptlang.org/',
         },
         {
-          name: 'Vue',
-          icon: 'icon-[skill-icons--vuejs-dark]',
-          url: 'https://vuejs.org/',
+          name: 'Python',
+          icon: 'icon-[simple-icons--python]',
+          url: 'https://www.python.org/',
         },
         {
-          name: 'Sass',
-          icon: 'icon-[skill-icons--sass]',
-          url: 'https://sass-lang.com/',
+          name: 'Docker',
+          icon: 'icon-[simple-icons--docker]',
+          url: 'https://www.docker.com/',
+        },
+        {
+          name: 'Terraform',
+          icon: 'icon-[simple-icons--terraform]',
+          url: 'https://www.terraform.io/',
+        },
+        {
+          name: 'Tailscale',
+          icon: 'icon-[simple-icons--tailscale]',
+          url: 'https://tailscale.com/',
+        },
+        {
+          name: 'GitHub Actions',
+          icon: 'icon-[simple-icons--githubactions]',
+          url: 'https://github.com/features/actions',
         },
       ],
     },
@@ -135,34 +128,34 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
       direction: 'right',
       skills: [
         {
-          name: 'Astro',
-          icon: 'icon-[skill-icons--astro]',
-          url: 'https://astro.build/',
+          name: 'PostgreSQL',
+          icon: 'icon-[simple-icons--postgresql]',
+          url: 'https://www.postgresql.org/',
         },
         {
-          name: 'Node.js',
-          icon: 'icon-[skill-icons--nodejs-dark]',
-          url: 'https://nodejs.org/',
+          name: 'Elasticsearch',
+          icon: 'icon-[simple-icons--elasticsearch]',
+          url: 'https://www.elastic.co/',
         },
         {
-          name: 'React',
-          icon: 'icon-[skill-icons--react-dark]',
-          url: 'https://react.dev/',
+          name: 'Redis',
+          icon: 'icon-[simple-icons--redis]',
+          url: 'https://redis.io/',
         },
         {
-          name: 'Next.js',
-          icon: 'icon-[skill-icons--nextjs-dark]',
-          url: 'https://nextjs.org/',
+          name: 'Grafana',
+          icon: 'icon-[simple-icons--grafana]',
+          url: 'https://grafana.com/',
         },
         {
-          name: 'Tailwind CSS',
-          icon: 'icon-[skill-icons--tailwindcss-dark]',
-          url: 'https://tailwindcss.com/',
+          name: 'Prometheus',
+          icon: 'icon-[simple-icons--prometheus]',
+          url: 'https://prometheus.io/',
         },
         {
-          name: 'Vite',
-          icon: 'icon-[skill-icons--vite-dark]',
-          url: 'https://vitejs.dev/',
+          name: 'Kubernetes',
+          icon: 'icon-[simple-icons--kubernetes]',
+          url: 'https://kubernetes.io/',
         },
       ],
     },
@@ -170,34 +163,34 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
       direction: 'left',
       skills: [
         {
-          name: 'Ubuntu',
-          icon: 'icon-[skill-icons--ubuntu-dark]',
-          url: 'https://ubuntu.com/',
+          name: 'Linux',
+          icon: 'icon-[simple-icons--linux]',
+          url: 'https://www.linux.org/',
         },
         {
           name: 'Git',
-          icon: 'icon-[skill-icons--git]',
+          icon: 'icon-[simple-icons--git]',
           url: 'https://git-scm.com/',
         },
         {
-          name: 'MongoDB',
-          icon: 'icon-[skill-icons--mongodb]',
-          url: 'https://www.mongodb.com/',
+          name: 'Node.js',
+          icon: 'icon-[simple-icons--nodedotjs]',
+          url: 'https://nodejs.org/',
         },
         {
-          name: 'Vercel',
-          icon: 'icon-[skill-icons--vercel-dark]',
-          url: 'https://vercel.com/',
+          name: 'Cloudflare',
+          icon: 'icon-[simple-icons--cloudflare]',
+          url: 'https://www.cloudflare.com/',
+        },
+        {
+          name: 'AWS',
+          icon: 'icon-[simple-icons--amazonwebservices]',
+          url: 'https://aws.amazon.com/',
         },
         {
           name: 'VS Code',
-          icon: 'icon-[skill-icons--vscode-dark]',
+          icon: 'icon-[simple-icons--visualstudiocode]',
           url: 'https://code.visualstudio.com/',
-        },
-        {
-          name: 'Obsidian',
-          icon: 'icon-[skill-icons--obsidian-dark]',
-          url: 'https://obsidian.md/',
         },
       ],
     },
@@ -214,16 +207,16 @@ export const SKILLSSHOWCASE_CONFIG: SkillsShowcaseConfig = {
 
 export const GITHUB_CONFIG: GithubConfig = {
   ENABLED: true,
-  GITHUB_USERNAME: 'Dnzzk2',
+  GITHUB_USERNAME: 'kylemclaren',
   TOOLTIP_ENABLED: true,
 }
 
 //--- Posts Page Config ---
 export const POSTS_CONFIG: PostConfig = {
   title: 'Posts',
-  description: 'Posts by Dnzzk2',
-  introduce: 'Here, I will share the usage instructions for this theme to help you quickly use it.',
-  author: 'Dnzzk2',
+  description: 'Posts by Kyle McLaren',
+  introduce: 'Thoughts on DevOps, SRE, cloud infrastructure, and the tools I use.',
+  author: 'Kyle McLaren',
   homePageConfig: {
     size: 2,
     type: 'compact',
@@ -252,21 +245,8 @@ export const POSTS_CONFIG: PostConfig = {
 }
 
 export const COMMENT_CONFIG: CommentConfig = {
-  enabled: true,
-  system: 'gitalk',
-  gitalk: {
-    clientID: import.meta.env.PUBLIC_GITHUB_CLIENT_ID,
-    clientSecret: import.meta.env.PUBLIC_GITHUB_CLIENT_SECRET,
-    repo: 'gitalk-comment',
-    owner: 'Dnzzk2',
-    admin: ['Dnzzk2'],
-    language: 'en-US',
-    perPage: 5,
-    pagerDirection: 'last',
-    createIssueManually: false,
-    distractionFreeMode: false,
-    enableHotKey: true,
-  },
+  enabled: false,
+  system: 'none',
 }
 
 export const TAGS_CONFIG: TagsConfig = {
@@ -277,8 +257,8 @@ export const TAGS_CONFIG: TagsConfig = {
 
 export const PROJECTS_CONFIG: ProjectConfig = {
   title: 'Projects',
-  description: 'The examples of my projects.',
-  introduce: 'The examples of my projects.',
+  description: 'Things I\'ve built.',
+  introduce: 'Things I\'ve built.',
 }
 
 export const PHOTOS_CONFIG: PhotosConfig = {

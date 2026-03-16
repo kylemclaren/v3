@@ -1,0 +1,92 @@
+---
+export interface WorkRole {
+  title: string
+  range: string
+  description: string
+}
+
+export interface WorkGroup {
+  company: string
+  url: string
+  location: string
+  icon: string
+  about: string
+  roles: WorkRole[]
+}
+
+interface Props {
+  groups: WorkGroup[]
+}
+
+const { groups } = Astro.props
+---
+
+<div class="relative">
+  {
+    groups.map((group, groupIndex) => (
+      <article class="group relative pl-14 pr-4">
+        <div class="absolute left-0 top-0 h-full flex flex-col items-center">
+          <div class="h-8 w-8 rounded-full border border-border bg-accent flex items-center justify-center z-10">
+            {group.icon.startsWith('icon-[') ? (
+              <span class:list={[group.icon, 'w-4 h-4 text-foreground/70 grayscale']} />
+            ) : (
+              <img src={group.icon} alt={group.company} class="w-4 h-4 grayscale opacity-70 dark:invert" />
+            )}
+          </div>
+          {groupIndex < groups.length - 1 && (
+            <div class="flex-1 w-0.5 bg-gradient-to-b from-border via-muted-foreground/15 to-transparent" />
+          )}
+        </div>
+
+        <div class="pb-10 group-last:pb-0">
+          <div class="flex flex-wrap items-center gap-x-2 mb-4 h-8">
+            <div class="company-hover relative">
+              <a
+                href={group.url}
+                target="_blank"
+                rel="nofollow noreferrer"
+                class="text-lg font-semibold text-foreground hover:text-primary transition-colors"
+              >
+                {group.company}
+              </a>
+              <div class="company-popup absolute left-0 top-full mt-2 z-20 w-72 rounded-lg border border-border bg-background p-3 shadow-lg opacity-0 invisible transition-all duration-200 pointer-events-none">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="h-5 w-5 flex items-center justify-center flex-shrink-0">
+                    {group.icon.startsWith('icon-[') ? (
+                      <span class:list={[group.icon, 'w-4 h-4 text-foreground/70 grayscale']} />
+                    ) : (
+                      <img src={group.icon} alt={group.company} class="w-4 h-4 grayscale opacity-70 dark:invert" />
+                    )}
+                  </div>
+                  <span class="text-sm font-semibold text-foreground">{group.company}</span>
+                </div>
+                <p class="text-xs text-muted-foreground leading-relaxed">{group.about}</p>
+              </div>
+            </div>
+            <span class="text-muted-foreground text-sm">&middot; {group.location}</span>
+          </div>
+
+          <div class="flex flex-col gap-6">
+            {group.roles.map((role) => (
+              <div>
+                <div class="flex flex-col gap-0.5 mb-2">
+                  <span class="text-base text-foreground/80 font-medium">{role.title}</span>
+                  <span class="text-xs text-muted-foreground font-mono tracking-wide">{role.range}</span>
+                </div>
+                <p class="text-sm text-muted-foreground/80 leading-relaxed">{role.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </article>
+    ))
+  }
+</div>
+
+<style>
+  .company-hover:hover .company-popup {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+</style>

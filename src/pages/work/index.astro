@@ -1,0 +1,101 @@
+---
+import Layout from '~/layouts/Layout.astro'
+import PageTitle from '~/components/base/PageTitle.astro'
+import WorkTimeline from '~/components/base/WorkTimeline.astro'
+import type { WorkGroup } from '~/components/base/WorkTimeline.astro'
+
+const workHistory: WorkGroup[] = [
+  {
+    company: 'Fly.io',
+    url: 'https://fly.io/',
+    location: 'Remote',
+    icon: 'icon-[simple-icons--flydotio]',
+    about: 'Fly.io is a platform for running full-stack apps and databases close to users around the world. It transforms Docker images into Firecracker micro-VMs running on hardware in 30+ regions.',
+    roles: [
+      {
+        title: 'Senior Software Engineer',
+        range: 'April 2025 — Present',
+        description:
+          'Building and maintaining Sprites — cloud development sandboxes for developers. Contributing to flyctl, managed Postgres, documentation, and developer tooling. Building AI agent tools, Terraform providers, and open source infrastructure in Go and TypeScript.',
+      },
+      {
+        title: 'Support Engineer',
+        range: 'June 2023 — April 2025',
+        description:
+          "Helped customers get and maintain their apps running smoothly. Provided support through email and the public forum, troubleshot issues, and worked closely with platform engineers to solve complex problems. This isn't a \"follow-the-script\" role — often writing the script and utilizing technical skills to provide creative solutions.",
+      },
+    ],
+  },
+  {
+    company: 'Elastic',
+    url: 'https://elastic.co/',
+    location: 'Remote',
+    icon: 'icon-[simple-icons--elastic]',
+    about: 'Elastic is the company behind Elasticsearch, Kibana, and the Elastic Stack. They provide search, observability, and security solutions used by thousands of organizations worldwide.',
+    roles: [
+      {
+        title: 'Support Engineer',
+        range: 'January 2022 — June 2023',
+        description:
+          'Supported some of the largest companies in the world with their Cloud and self-hosted Elasticsearch and Kibana installations. Dedicated to providing top-notch support and solutions to help clients achieve their business goals.',
+      },
+    ],
+  },
+  {
+    company: 'IBM',
+    url: 'https://www.ibm.com/cloud/databases/',
+    location: 'Remote',
+    icon: 'icon-[simple-icons--ibm]',
+    about: 'IBM Cloud Databases provides fully managed database services including PostgreSQL, MongoDB, Redis, Elasticsearch, and etcd. IBM acquired Compose in 2015 to build out this platform.',
+    roles: [
+      {
+        title: 'SME — Cloud Databases',
+        range: 'October 2015 — December 2021',
+        description:
+          'Subject Matter Expert specializing in the IBM Cloud Databases/Compose domains. Resolved customer database issues while enhancing quality of service. Participated in on-call rotations, triaged platform issues, executed host maintenance, and automated provisioning using Terraform. Focused on Kubernetes, PostgreSQL, MongoDB, Elasticsearch, Redis, and etcd.',
+      },
+    ],
+  },
+  {
+    company: 'Compose',
+    url: 'https://www.compose.com/',
+    location: 'Remote',
+    icon: '/logos/compose.svg',
+    about: 'Compose was a Y-Combinator (S11) backed Database-as-a-Service startup offering managed MongoDB, PostgreSQL, Redis, Elasticsearch, and more. Acquired by IBM in 2015.',
+    roles: [
+      {
+        title: 'Support Engineer',
+        range: 'September 2014 — October 2015',
+        description:
+          'Compose is a Y-Combinator (S11) backed DBaaS startup acquired by IBM in 2015. Originally hired as a Support Engineer, I organically moved into an operations/infrastructure/SRE role — servicing PagerDuty alerts, triaging platform issues, provisioning clusters, fixing bugs, and fixing many (many) broken databases.',
+      },
+    ],
+  },
+  {
+    company: 'Standard Bank Group',
+    url: 'https://standardbank.com/',
+    location: 'Sandton, South Africa',
+    icon: '/logos/standardbank.svg',
+    about: 'Standard Bank Group is Africa\'s largest bank by assets, operating across 20 countries on the continent. Headquartered in Johannesburg, it offers personal, business, and corporate banking services.',
+    roles: [
+      {
+        title: 'Snr. Multimedia Designer',
+        range: 'July 2011 — September 2014',
+        description:
+          'Worked closely with EXCO and MANCO teams within the Private Clients division, maintaining the consistent brand look and feel. Developed a custom internal application to empower Banking Relationship Managers to efficiently generate client information documents.',
+      },
+    ],
+  },
+]
+---
+
+<Layout title="Work" description="My work history and career journey.">
+  <div class="relative z-[1]">
+    <div class="py-8 pb-10 px-6 sm:px-8">
+      <PageTitle title="Work" introduce="Where I've been and what I've done." />
+      <div class="mt-8">
+        <WorkTimeline groups={workHistory} />
+      </div>
+    </div>
+  </div>
+</Layout>
