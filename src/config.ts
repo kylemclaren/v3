@@ -289,4 +289,9 @@ export const ANALYTICS_CONFIG: AnalyticsConfig = {
     websiteId: 'Your websiteId in umami',
     serverUrl: 'https://cloud.umami.is/script.js',
   },
+  plausible: {
+    enabled: true,
+    domain: 'kylemclaren.com',
+    // endpoint: 'https://plausible.io/api/event', // override for self-hosted / proxied Plausible
+  },
 }

@@ -98,5 +98,26 @@ const ogImage = new URL(image || SITE.ogImage, Astro.url)
     </>
   )
 }
+{
+  ANALYTICS_CONFIG.plausible?.enabled && (
+    <script>
+      import { init } from '@plausible-analytics/tracker'
+      import { ANALYTICS_CONFIG } from '~/config'
+
+      const plausible = ANALYTICS_CONFIG.plausible
+      // Runs once on initial load. The tracker patches history.pushState, so
+      // Astro's ClientRouter navigations are auto-captured as pageviews.
+      if (plausible?.enabled && plausible.domain) {
+        init({
+          domain: plausible.domain,
+          ...(plausible.endpoint ? { endpoint: plausible.endpoint } : {}),
+          autoCapturePageviews: true,
+          outboundLinks: true,
+          fileDownloads: true,
+        })
+      }
+    </script>
+  )
+}
 
 <ClientRouter fallback="swap" />

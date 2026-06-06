@@ -267,6 +267,11 @@ export interface AnalyticsConfig {
     enabled: boolean
     id: string
   }
+  plausible?: {
+    enabled: boolean
+    domain: string
+    endpoint?: string
+  }
 }
 
 export interface CommentConfig {
