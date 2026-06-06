@@ -21,8 +21,6 @@ const ThemeToggle = () => {
   const theme = useStore(themeStore)
   const controlsSun = useAnimation()
   const controlsMoon = useAnimation()
-  const controlsSystem = useAnimation()
-
   useEffect(() => {
     setMounted(true)
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system'
@@ -32,19 +30,17 @@ const ThemeToggle = () => {
   useEffect(() => {
     if (!mounted) return
 
-    if (theme === 'system') {
-      controlsSun.start('hidden')
-      controlsSystem.start('visible')
-      controlsMoon.start('hidden')
-    } else {
-      controlsSun.start(theme === 'light' ? 'visible' : 'hidden')
-      controlsMoon.start(theme === 'dark' ? 'visible' : 'hidden')
-      controlsSystem.start('hidden')
-    }
+    // Resolve system theme to its actual value for the icon display
+    const resolved = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme
+
+    controlsSun.start(resolved === 'light' ? 'visible' : 'hidden')
+    controlsMoon.start(resolved === 'dark' ? 'visible' : 'hidden')
 
     localStorage.setItem('theme', theme)
     applyTheme(theme)
-  }, [theme, mounted, controlsSun, controlsMoon, controlsSystem])
+  }, [theme, mounted, controlsSun, controlsMoon])
 
   const applyTheme = (newTheme: string) => {
     const root = document.documentElement
@@ -67,12 +63,11 @@ const ThemeToggle = () => {
   }
 
   const handleClick = () => {
-    const themeMap = {
-      light: 'dark',
-      dark: 'system',
-      system: 'light',
-    }
-    themeStore.set(themeMap[theme] as 'light' | 'dark' | 'system')
+    // Resolve current effective theme, then toggle to the opposite
+    const resolved = theme === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : theme
+    themeStore.set(resolved === 'light' ? 'dark' : 'light')
   }
 
   return (
@@ -85,16 +80,7 @@ const ThemeToggle = () => {
           animate={controlsSun}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <span className="icon-[tabler--sun-filled] size-5"></span>
-        </motion.div>
-        <motion.div
-          className="absolute inset-0"
-          variants={iconVariants}
-          initial="hidden"
-          animate={controlsSystem}
-          transition={{ duration: 0.2, ease: 'easeInOut' }}
-        >
-          <span className="icon-[tabler--device-desktop-question] size-5"></span>
+          <span className="text-base leading-5">☀️</span>
         </motion.div>
         <motion.div
           className="absolute inset-0"
@@ -103,7 +89,7 @@ const ThemeToggle = () => {
           animate={controlsMoon}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <span className="icon-[tabler--moon-filled] size-5"></span>
+          <span className="text-base leading-5">🌙</span>
         </motion.div>
       </motion.div>
     </button>

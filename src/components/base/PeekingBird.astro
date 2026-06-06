@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets'
+import bird from '~/assets/bird.png'
+---
+
+<div class="peeking-bird" aria-hidden="true" transition:persist="peeking-bird">
+  <Image src={bird} alt="" width={280} height={279} class="peeking-bird__img" loading="lazy" />
+</div>
+
+<style>
+  .peeking-bird {
+    position: fixed;
+    bottom: 0;
+    right: clamp(1rem, 8vw, 5rem);
+    z-index: 30;
+    width: 84px;
+    line-height: 0;
+    pointer-events: none;
+    /* Tuck most of the body below the edge so only the head peeks out. */
+    transform: translateY(52%);
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: drop-shadow(0 -3px 8px hsl(var(--foreground) / 0.12));
+  }
+
+  .peeking-bird__img {
+    width: 100%;
+    height: auto;
+    /* Gentle idle bob, composed on top of the wrapper's peek transform. */
+    animation: bird-bob 5s ease-in-out infinite;
+  }
+
+  @keyframes bird-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* Keep mobile footer uncluttered. */
+  @media (max-width: 639px) {
+    .peeking-bird {
+      display: none;
+    }
+  }
+
+  /* On hovering pointers with room to spare, let it pop fully into view. */
+  @media (hover: hover) and (min-width: 1024px) {
+    .peeking-bird {
+      pointer-events: auto;
+    }
+    .peeking-bird:hover {
+      transform: translateY(0);
+    }
+    .peeking-bird:hover .peeking-bird__img {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .peeking-bird,
+    .peeking-bird__img {
+      animation: none;
+    }
+    .peeking-bird {
+      transition: none;
+    }
+  }
+</style>

@@ -27,12 +27,12 @@ export const SITE: Site = {
 
 export const HEADER_LINKS: Link[] = [
   {
-    name: 'Posts',
-    url: '/posts',
-  },
-  {
     name: 'Work',
     url: '/work',
+  },
+  {
+    name: 'Posts',
+    url: '/posts',
   },
   {
     name: 'Projects',
@@ -46,12 +46,12 @@ export const FOOTER_LINKS: Link[] = [
     url: '/',
   },
   {
-    name: 'Posts',
-    url: '/posts',
-  },
-  {
     name: 'Work',
     url: '/work',
+  },
+  {
+    name: 'Posts',
+    url: '/posts',
   },
   {
     name: 'Projects',
@@ -74,8 +74,13 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
   {
     name: 'twitter',
-    url: 'https://twitter.com/kylemclaren',
+    url: 'https://x.com/kylemclaren',
     icon: 'icon-[ri--twitter-x-fill]',
+  },
+  {
+    name: 'email',
+    url: 'mailto:hello@kylemclaren.com',
+    icon: 'icon-[ri--send-plane-fill]',
   },
 ]
 

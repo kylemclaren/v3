@@ -5,16 +5,13 @@ import HeaderGradient from '~/components/theme/HeaderGradient.astro'
 import SectionDivider from '~/components/base/SectionDivider.astro'
 import HeaderLink from '~/components/base/HeaderLink.astro'
 import SearchSwitch from '~/components/base/SearchSwitch.astro'
-import { Image } from 'astro:assets'
-import avatar from '~/assets/avatar.webp'
+import HeaderAvatar from '~/components/base/HeaderAvatar.astro'
 ---
 
 <HeaderGradient />
 <header>
   <div class="mx-auto global-layout-width flex items-center px-6 sm:px-8 py-4 lg:px-8">
-    <a href="/" class="pointer-events-auto select-none flex-shrink-0" transition:persist>
-      <Image src={avatar} width={64} height={64} alt="Kyle McLaren" class="w-8 h-8 rounded-full object-cover" densities={[1, 2]} loading="eager" />
-    </a>
+    <HeaderAvatar />
     <div class="flex-1 flex justify-center gap-1">
       {
         HEADER_LINKS.map((link) => (

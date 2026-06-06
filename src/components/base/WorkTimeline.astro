@@ -63,7 +63,7 @@ const { groups } = Astro.props
                 <p class="text-xs text-muted-foreground leading-relaxed">{group.about}</p>
               </div>
             </div>
-            <span class="text-muted-foreground text-sm">&middot; {group.location}</span>
+            <span class="rounded-md border border-border/50 px-1.5 py-0.5 font-mono text-xs text-muted-foreground/70">{group.location}</span>
           </div>
 
           <div class="flex flex-col gap-6">
@@ -73,7 +73,13 @@ const { groups } = Astro.props
                   <span class="text-base text-foreground/80 font-medium">{role.title}</span>
                   <span class="text-xs text-muted-foreground font-mono tracking-wide">{role.range}</span>
                 </div>
-                <p class="text-sm text-muted-foreground/80 leading-relaxed">{role.description}</p>
+                <div class="role-expandable">
+                  <p class="role-description text-sm text-muted-foreground/80 leading-relaxed">{role.description}</p>
+                  <button class="role-toggle text-xs text-muted-foreground/60 hover:text-primary transition-colors mt-1 cursor-pointer flex items-center justify-center gap-1 w-full">
+                    <span class="toggle-icon icon-[tabler--plus] size-3 transition-transform duration-200" />
+                    <span class="toggle-text">Expand</span>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -89,4 +95,65 @@ const { groups } = Astro.props
     visibility: visible;
     pointer-events: auto;
   }
+
+  .role-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .role-expandable.truncated .role-description {
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  }
+
+  .role-expandable.expanded .role-description {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
 </style>
+
+<script>
+  function initExpandables() {
+    document.querySelectorAll('.role-expandable').forEach((el) => {
+      const desc = el.querySelector('.role-description') as HTMLElement
+      const btn = el.querySelector('.role-toggle') as HTMLElement
+      if (!desc || !btn) return
+
+      // Temporarily remove clamp to measure true content height
+      const clampedHeight = desc.clientHeight
+      desc.style.webkitLineClamp = 'unset'
+      desc.style.display = 'block'
+      const naturalHeight = desc.scrollHeight
+      // Remove inline styles so CSS classes control the layout
+      desc.style.removeProperty('display')
+      desc.style.removeProperty('-webkit-line-clamp')
+      const isOverflowing = naturalHeight > clampedHeight
+      if (isOverflowing) {
+        el.classList.add('truncated')
+        btn.style.display = 'flex'
+      } else {
+        el.classList.remove('truncated')
+        btn.style.display = 'none'
+      }
+
+      btn.addEventListener('click', () => {
+        const expanded = el.classList.toggle('expanded')
+        const text = btn.querySelector('.toggle-text')
+        const icon = btn.querySelector('.toggle-icon')
+        if (text) text.textContent = expanded ? 'Collapse' : 'Expand'
+        if (icon) {
+          icon.classList.toggle('icon-[tabler--plus]', !expanded)
+          icon.classList.toggle('icon-[tabler--minus]', expanded)
+        }
+      })
+    })
+  }
+
+  initExpandables()
+  document.addEventListener('astro:after-swap', initExpandables)
+</script>

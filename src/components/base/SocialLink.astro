@@ -29,7 +29,7 @@ const githubUser = isGithub ? href.split('/').filter(Boolean).pop() : undefined
   ></span>
   {
     count !== undefined && (
-      <span class="text-muted-foreground text-sm transition-colors duration-300 group-hover:text-primary">
+      <span class="hidden sm:inline text-muted-foreground text-sm transition-colors duration-300 group-hover:text-primary">
         <NumberTicker play value={count} label={label} client:load githubUser={githubUser} />
       </span>
     )

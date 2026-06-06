@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useSpring, useMotionValue, useTransform, AnimatePresence } from 'motion/react'
-
-const CONFETTI_COLORS = ['#a78bfa', '#c084fc', '#e879f9', '#f472b6', '#fb923c', '#facc15', '#34d399', '#60a5fa']
+import confetti from 'canvas-confetti'
 
 const UPSTASH_URL = import.meta.env.PUBLIC_UPSTASH_REDIS_REST_URL
 const UPSTASH_TOKEN_RO = import.meta.env.PUBLIC_UPSTASH_REDIS_REST_TOKEN_RO
@@ -31,44 +30,29 @@ async function incrementCount(): Promise<number> {
   }
 }
 
-function createConfetti(container: HTMLElement) {
-  const count = 40
-  const pieces: HTMLDivElement[] = []
+function fireConfetti(element: HTMLElement) {
+  const rect = element.getBoundingClientRect()
+  const x = (rect.left + rect.width / 2) / window.innerWidth
+  const y = (rect.top + rect.height / 2) / window.innerHeight
 
-  for (let i = 0; i < count; i++) {
-    const piece = document.createElement('div')
-    const color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]
-    const size = Math.random() * 6 + 4
-    const angle = (Math.random() * 360) * (Math.PI / 180)
-    const velocity = Math.random() * 200 + 100
-    const x = Math.cos(angle) * velocity
-    const y = Math.sin(angle) * velocity - 150
+  const defaults = { origin: { x, y }, disableForReducedMotion: true }
 
-    Object.assign(piece.style, {
-      position: 'absolute',
-      width: `${size}px`,
-      height: `${size}px`,
-      backgroundColor: color,
-      borderRadius: Math.random() > 0.5 ? '50%' : '0',
-      left: '50%',
-      top: '50%',
-      pointerEvents: 'none',
-      zIndex: '50',
-    })
-
-    piece.animate(
-      [
-        { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
-        { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${Math.random() * 720}deg)`, opacity: 0 },
-      ],
-      { duration: 800 + Math.random() * 400, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', fill: 'forwards' }
-    )
-
-    container.appendChild(piece)
-    pieces.push(piece)
-  }
-
-  setTimeout(() => pieces.forEach((p) => p.remove()), 1500)
+  confetti({
+    ...defaults,
+    particleCount: 30,
+    spread: 60,
+    startVelocity: 25,
+    colors: ['#a78bfa', '#c084fc', '#e879f9', '#f472b6', '#fb923c', '#facc15', '#34d399', '#60a5fa'],
+  })
+  confetti({
+    ...defaults,
+    particleCount: 20,
+    spread: 100,
+    startVelocity: 35,
+    decay: 0.92,
+    scalar: 0.8,
+    colors: ['#a78bfa', '#c084fc', '#e879f9', '#f472b6', '#fb923c', '#facc15', '#34d399', '#60a5fa'],
+  })
 }
 
 export default function ThumbsUp() {
@@ -119,7 +103,7 @@ export default function ThumbsUp() {
     })
 
     if (containerRef.current) {
-      createConfetti(containerRef.current)
+      fireConfetti(containerRef.current)
     }
 
     setTimeout(() => setShowPlus(false), 800)
