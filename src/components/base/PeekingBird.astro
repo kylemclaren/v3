@@ -1,10 +1,15 @@
 ---
-import { Image } from 'astro:assets'
-import bird from '~/assets/bird.png'
+import { Mascot } from 'page-mascot'
+
+// Both sheets are built by the page-mascot pipeline from characters/birdman/.
+const directions = '/mascots/birdman-directions.webp'
+const reactions = '/mascots/birdman-reactions.webp'
 ---
 
-<div class="peeking-bird" aria-hidden="true" transition:persist="peeking-bird">
-  <Image src={bird} alt="" width={280} height={279} class="peeking-bird__img" loading="lazy" />
+<div class="peeking-bird" transition:persist="peeking-bird">
+  <div class="peeking-bird__bob">
+    <Mascot client:idle {directions} {reactions} size={140} label="bird" />
+  </div>
 </div>
 
 <style>
@@ -13,18 +18,13 @@ import bird from '~/assets/bird.png'
     bottom: 0;
     right: clamp(1rem, 8vw, 5rem);
     z-index: 30;
-    width: 84px;
     line-height: 0;
-    pointer-events: none;
-    /* Tuck most of the body below the edge so only the head peeks out. */
-    transform: translateY(52%);
-    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Tuck the lower body below the edge so the head and top of the chest show. */
+    transform: translateY(22%);
     filter: drop-shadow(0 -3px 8px hsl(var(--foreground) / 0.12));
   }
 
-  .peeking-bird__img {
-    width: 100%;
-    height: auto;
+  .peeking-bird__bob {
     /* Gentle idle bob, composed on top of the wrapper's peek transform. */
     animation: bird-bob 5s ease-in-out infinite;
   }
@@ -39,33 +39,16 @@ import bird from '~/assets/bird.png'
     }
   }
 
-  /* Keep mobile footer uncluttered. */
+  /* Keep mobile footer uncluttered. Cursor tracking is off there anyway. */
   @media (max-width: 639px) {
     .peeking-bird {
       display: none;
     }
   }
 
-  /* On hovering pointers with room to spare, let it pop fully into view. */
-  @media (hover: hover) and (min-width: 1024px) {
-    .peeking-bird {
-      pointer-events: auto;
-    }
-    .peeking-bird:hover {
-      transform: translateY(0);
-    }
-    .peeking-bird:hover .peeking-bird__img {
-      animation-play-state: paused;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .peeking-bird,
-    .peeking-bird__img {
+    .peeking-bird__bob {
       animation: none;
-    }
-    .peeking-bird {
-      transition: none;
     }
   }
 </style>
